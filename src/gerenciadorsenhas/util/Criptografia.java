@@ -17,7 +17,7 @@ public class Criptografia {
     // IMPORTANTE: Chave mestra fixa. Para maior segurança em produção,
     // esta chave não deveria estar hardcoded.
     // Deve ter 16, 24 ou 32 bytes.
-    private static final String CHAVE_MESTRA_FIXA_STRING = "SuaChaveDe16Ou32BytesAqui!"; // Troque por uma sua de 16 ou 32 caracteres
+    private static final String CHAVE_MESTRA_FIXA_STRING = "MinhaChave123456"; 
 
     private static SecretKey getChaveSecreta() {
         byte[] chaveBytes = CHAVE_MESTRA_FIXA_STRING.getBytes(StandardCharsets.UTF_8);

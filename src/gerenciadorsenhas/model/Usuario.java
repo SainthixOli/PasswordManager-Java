@@ -1,5 +1,6 @@
 package model;
 
+import java.time.format.DateTimeFormatter;
 import service.Generate;
 import java.util.ArrayList;
 
@@ -55,25 +56,35 @@ public class Usuario {
         this.senhasDeServicos.add(senha);
     }
 
-    public void gerarNovoPinParaServico(String nomeDoServico, int tamanhoDaSenha, Generate gerador) {
+    public Senha gerarNovoPinParaServico(String nomeDoServico, int tamanhoDaSenha, Generate gerador) {
         if (gerador == null) {
             System.err.println("Erro: Instância do gerador não fornecida.");
-            return;
+            return null;
         }
-        gerador.gerarSenhaParaUsuarioESalvar(this, nomeDoServico, tamanhoDaSenha);
+        
+        // MUDANÇA 2: Retorna o resultado da chamada ao gerador
+        return gerador.gerarSenhaParaUsuarioESalvar(this, nomeDoServico, tamanhoDaSenha);
     }
 
     public void mostrarPinsDeServicos() {
         System.out.println("\n--- PINs/Senhas de Serviços para " + nomeDeUsuario + " ---");
         List<Senha> senhasAtuais = this.senhasDeServicos;
+
         if (senhasAtuais == null || senhasAtuais.isEmpty()) {
             System.out.println("Nenhuma senha de serviço cadastrada.");
         } else {
+            // Define o formato para a data
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            
             for (Senha senha : senhasAtuais) {
-                System.out.println(senha.toString());
+                System.out.println("------------------------------------");
+                System.out.println("Serviço  : " + senha.getNomeServico());
+                // MUDANÇA PRINCIPAL: Usa .getValor() para pegar a senha real
+                System.out.println("Senha    : " + senha.getValor());
+                System.out.println("Criada em: " + senha.getDataCriacao().format(formatter));
             }
+            System.out.println("------------------------------------");
         }
-        System.out.println("------------------------------------");
     }
 
     public void deletarSenhaDeServico(String nomeDoServico) {

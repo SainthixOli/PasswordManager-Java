@@ -65,27 +65,24 @@ public class Generate {
      * @param nomeServico O nome/descrição do serviço para o qual a senha está sendo gerada.
      * @param tamanho O tamanho desejado para a senha.
      */
-    public void gerarSenhaParaUsuarioESalvar(Usuario usuario, String nomeServico, int tamanho) {
-        if (usuario == null) {
-            System.err.println("SERVICE.GENERATE: Erro - Usuário não pode ser nulo para gerar senha.");
-            return;
+    public Senha gerarSenhaParaUsuarioESalvar(Usuario usuario, String nomeServico, int tamanho) {
+        if (usuario == null || nomeServico == null || nomeServico.trim().isEmpty()) {
+            System.err.println("SERVICE.GENERATE: Erro - Usuário ou nome do serviço inválido.");
+            return null;
         }
-        if (nomeServico == null || nomeServico.trim().isEmpty()) {
-            System.err.println("SERVICE.GENERATE: Erro - Nome do serviço não pode ser vazio.");
-            return;
-        }
-        // O tamanho já é validado em gerarNovaStringDeSenha
 
         String senhaGeradaTextoPlano = gerarNovaStringDeSenha(tamanho);
 
         if (senhaGeradaTextoPlano != null) {
             Senha novaSenhaDeServico = new Senha(senhaGeradaTextoPlano, nomeServico);
-            usuario.adicionarSenhaDeServico(novaSenhaDeServico); // Assume que Usuario tem este método
-
-            // System.out.println("SERVICE.GENERATE: Nova senha para o serviço '" + nomeServico +
-            //                    "' gerada com valor [PROTEGIDO] e associada ao usuário '" + usuario.getNomeDeUsuario() + "'.");
+            usuario.adicionarSenhaDeServico(novaSenhaDeServico);
+            
+            // MUDANÇA 2: Retorna o objeto Senha que foi criado
+            return novaSenhaDeServico;
         } else {
-            System.err.println("SERVICE.GENERATE: Não foi possível gerar a string da senha para o serviço '" + nomeServico + "' (tamanho inválido: " + tamanho + ").");
+            System.err.println("SERVICE.GENERATE: Não foi possível gerar a string da senha para o serviço '" + nomeServico + "'.");
+            return null; // Retorna null em caso de falha
         }
     }
+      
 }

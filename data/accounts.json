@@ -1,0 +1,14 @@
+[ {
+  "nomeDeUsuario" : "Oliver",
+  "senhaDaConta" : {
+    "nomeUsuarioReferencia" : "Oliver",
+    "hashDaSenhaArmazenado" : "BoG9Zlm2QAF9SBfrHmrtky1t42K+VEXFchqjhMhsgnLOm+8gYTJB+nVoFN5UpD2Eqm2cGCfTEtLSDAm66pJFEw==",
+    "salBase64" : "QBR+WN+rPo4MVjPUPvAI8A==",
+    "dataCriacao" : "2025-08-24T00:01:35.247364"
+  },
+  "senhasDeServicos" : [ {
+    "valor" : "8KsqySvhLM8y+wF4ii4M0nNxEg2kxyKIsHi2nVkI0cQGwd8q6QT+Q/nZB2sV4KOa",
+    "nomeServico" : "Teste",
+    "dataCriacao" : "2025-08-24T00:31:50.609715"
+  } ]
+} ]
