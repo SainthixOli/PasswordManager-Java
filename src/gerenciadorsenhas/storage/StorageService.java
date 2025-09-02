@@ -1,4 +1,4 @@
-package storage; // Ou gerenciadorsenhas.storage, conforme sua estrutura
+package storage; 
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import model.Usuario;
 import model.Senha;
-import util.Criptografia; // Certifique-se que o pacote de Criptografia está correto (ex: gerenciadorsenhas.util)
+import util.Criptografia; 
 
 import java.io.File;
 import java.io.IOException;

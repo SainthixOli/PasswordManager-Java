@@ -62,7 +62,6 @@ public class Usuario {
             return null;
         }
         
-        // MUDANÇA 2: Retorna o resultado da chamada ao gerador
         return gerador.gerarSenhaParaUsuarioESalvar(this, nomeDoServico, tamanhoDaSenha);
     }
 
@@ -101,7 +100,7 @@ public class Usuario {
                 break;
             }
         }
-        // Removi os System.out daqui para deixar a classe mais focada no modelo
+        
     }
 
     public void deletarCadastroDeServico(String nomeDoServico) {

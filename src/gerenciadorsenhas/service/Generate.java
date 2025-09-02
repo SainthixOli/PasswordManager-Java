@@ -1,4 +1,4 @@
-package service; // Ou gerenciadorsenhas.service, conforme sua estrutura
+package service; 
 
 import model.Senha;
 import model.Usuario;
@@ -77,7 +77,7 @@ public class Generate {
             Senha novaSenhaDeServico = new Senha(senhaGeradaTextoPlano, nomeServico);
             usuario.adicionarSenhaDeServico(novaSenhaDeServico);
             
-            // MUDANÇA 2: Retorna o objeto Senha que foi criado
+            
             return novaSenhaDeServico;
         } else {
             System.err.println("SERVICE.GENERATE: Não foi possível gerar a string da senha para o serviço '" + nomeServico + "'.");

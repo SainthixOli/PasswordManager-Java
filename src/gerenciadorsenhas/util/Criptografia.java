@@ -14,16 +14,14 @@ public class Criptografia {
     private static final String ALGORITMO_CHAVE = "AES";
     private static final int TAMANHO_IV_BYTES = 16;
 
-    // IMPORTANTE: Chave mestra fixa. Para maior segurança em produção,
-    // esta chave não deveria estar hardcoded.
-    // Deve ter 16, 24 ou 32 bytes.
+    
     private static final String CHAVE_MESTRA_FIXA_STRING = "MinhaChave123456"; 
 
     private static SecretKey getChaveSecreta() {
         byte[] chaveBytes = CHAVE_MESTRA_FIXA_STRING.getBytes(StandardCharsets.UTF_8);
         // Validação do tamanho da chave para AES
         if (chaveBytes.length != 16 && chaveBytes.length != 24 && chaveBytes.length != 32) {
-            // Em um utilitário, lançar uma exceção é mais apropriado do que imprimir no console.
+            
             throw new IllegalArgumentException("A chave de criptografia DEVE ter 16, 24 ou 32 bytes.");
         }
         return new SecretKeySpec(chaveBytes, ALGORITMO_CHAVE);

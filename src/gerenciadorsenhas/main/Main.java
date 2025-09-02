@@ -1,10 +1,14 @@
 package main;
 
+
 import login.Login;
 import model.Usuario;
 import service.Generate;
 import storage.StorageService;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,7 +144,9 @@ public class Main {
             System.out.println("1. Gerar e salvar nova senha para um serviço");
             System.out.println("2. Ver senhas salvas");
             System.out.println("3. Deletar senha de um serviço");
-            System.out.println("4. Logout");
+            System.out.println("4. Adicionar Senha Existente");
+            System.out.println("5. Copiar senha de um serviço"); 
+            System.out.println("6. Logout");
             System.out.print("Escolha uma opção: ");
 
             int escolha = lerOpcao();
@@ -186,11 +192,16 @@ public class Main {
                     salvarDados();
                     pressioneEnterParaContinuar();
                     break;
-
                 case 4:
-                    // Não precisa de pausa aqui, pois o logout já limpa a tela
-                    return; // Sai do menu e volta para o fazerLogin
-
+                    adicionarSenhaExistente(usuario);
+                    break;    
+                case 5:
+                    
+                    copiarSenhaDoUsuario(usuario);
+                    break;
+                case 6:
+                    System.out.println("Fazendo logout...");
+                    return;
                 default:
                     System.out.println("Opção inválida.");
                     pressioneEnterParaContinuar();
@@ -235,5 +246,78 @@ public class Main {
                 System.out.println();
             }
         }
+    }
+    
+    private static void adicionarSenhaExistente(Usuario usuario) {
+        System.out.print("Digite o nome do serviço para o qual deseja adicionar a senha: ");
+        String nomeServico = scanner.nextLine();
+
+        System.out.print("Digite a senha em texto plano que deseja adicionar: ");
+        String valorSenha = scanner.nextLine();
+
+        if (nomeServico == null || nomeServico.trim().isEmpty() || valorSenha == null || valorSenha.trim().isEmpty()) {
+            System.out.println("Nome do serviço ou valor da senha inválido. Operação cancelada.");
+            return;
+        }
+
+        Senha novaSenha = new Senha(valorSenha, nomeServico);
+        usuario.adicionarSenhaDeServico(novaSenha);
+        System.out.println("Senha para o serviço '" + nomeServico + "' adicionada com sucesso.");
+
+        salvarDados();
+        pressioneEnterParaContinuar();
+    }
+
+    /**
+     * Copia o texto fornecido para a área de transferência do sistema.
+     * @param texto O texto a ser copiado.
+     */
+    private static void copiarParaAreaDeTransferencia(String texto) {
+        // StringSelection é o objeto que "empacota" o nosso texto
+        StringSelection stringSelection = new StringSelection(texto);
+        
+        // Acessamos a área de transferência do sistema operacional
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        
+        // Definimos o conteúdo da área de transferência com o nosso texto empacotado
+        clipboard.setContents(stringSelection, null);
+        
+        System.out.println("\n✅ Senha copiada para a área de transferência!");
+        System.out.println("(Cuidado: a senha ficará disponível para ser colada. Cole-a em um local seguro.)");
+    }
+
+    private static void copiarSenhaDoUsuario(Usuario usuarioLogado) {
+        List<Senha> senhasDoUsuario = usuarioLogado.getSenhasDeServicos();
+        
+        if (senhasDoUsuario == null || senhasDoUsuario.isEmpty()) {
+            System.out.println("\nVocê não tem senhas salvas para copiar.");
+            pressioneEnterParaContinuar();
+            return;
+        }
+
+        System.out.println("\n--- Suas Senhas Salvas ---");
+        // Mostra a lista de senhas, cada uma com um número
+        for (int i = 0; i < senhasDoUsuario.size(); i++) {
+            // (i + 1) para começar a numerar do 1 em vez do 0
+            System.out.println((i + 1) + ". " + senhasDoUsuario.get(i).getNomeServico());
+        }
+        System.out.println("-------------------------");
+        System.out.print("Digite o NÚMERO da senha que deseja copiar (ou 0 para cancelar): ");
+        int numeroEscolhido = lerOpcao();
+
+        // Valida a escolha do usuário
+        if (numeroEscolhido > 0 && numeroEscolhido <= senhasDoUsuario.size()) {
+            // Pega a senha escolhida da lista (lembrando que a lista começa no índice 0)
+            Senha senhaParaCopiar = senhasDoUsuario.get(numeroEscolhido - 1);
+            
+            // Chama nosso novo método para copiar o VALOR da senha
+            copiarParaAreaDeTransferencia(senhaParaCopiar.getValor());
+        } else if (numeroEscolhido != 0) {
+            System.out.println("Número inválido.");
+        } else {
+            System.out.println("Operação cancelada.");
+        }
+        
+        pressioneEnterParaContinuar();
     }
 }
