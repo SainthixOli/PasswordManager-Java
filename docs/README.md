@@ -1,7 +1,7 @@
 # 🔒 PasswordManager-Java
 
 <p align="center">
-  <img src="./img/LogoPM.png" alt="Logo do Projeto" width="200">
+  <img src="./img/LogoPM.png" alt="Logo do Projeto" width="500">
 </p>
 
 ![Status do Projeto](https://img.shields.io/badge/status-concluído-brightgreen)
