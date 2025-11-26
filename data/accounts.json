@@ -19,4 +19,38 @@
     "nomeServico" : "Teste 2",
     "dataCriacao" : "2025-09-02T13:18:19.461825"
   } ]
+}, {
+  "nomeDeUsuario" : "Teste31",
+  "senhaDaConta" : {
+    "nomeUsuarioReferencia" : "Teste31",
+    "hashDaSenhaArmazenado" : "J/C8VM1yiaDyR5/VZvWlhUK+xq9SfeSmWxBlruJ8dFgI2SoRdieWiVpWDqiygsloKN5YrKuuPZ1TzdNn6NA+Mg==",
+    "salBase64" : "I+Q2aa55sqfBISzMZw2VsQ==",
+    "dataCriacao" : "2025-11-26T16:55:15.066195"
+  },
+  "senhasDeServicos" : [ {
+    "valor" : "MsKoNnXA4cF5zIJ+9HV+jVme3ucwwPNZuzZ1lnicBfs7H5lhLnwmlEf7WCTkwmGK",
+    "nomeServico" : "Site1",
+    "dataCriacao" : "2025-11-26T16:55:35.272859"
+  }, {
+    "valor" : "ftQ3gL8o0bJUHTXTNbZLIVRwxcj2T5NCqnlG4QsinkzahDKGZ8K0zJXkdzxZvsyf",
+    "nomeServico" : "Site1",
+    "dataCriacao" : "2025-11-26T16:56:18.290687"
+  } ]
+}, {
+  "nomeDeUsuario" : "Teste1",
+  "senhaDaConta" : {
+    "nomeUsuarioReferencia" : "Teste1",
+    "hashDaSenhaArmazenado" : "08jB2xFMFq/VXIfQn2jPvruRwcwugwsOWvl85DetLXZRf1tBvVg/ogUmK2IchvdKKCsK4itVixjVssQxbyTL5A==",
+    "salBase64" : "MnFSbU/ZJDnBmJl/qckYMw==",
+    "dataCriacao" : "2025-11-26T17:00:58.729201"
+  },
+  "senhasDeServicos" : [ {
+    "valor" : "+5CJQMrwpfNZJkTJgajqr4U07V0BGYUyEaCrg8U+qdiwjLvae6KX9SGzTyHlZQQd",
+    "nomeServico" : "Site de Vendas",
+    "dataCriacao" : "2025-11-26T17:01:11.343686"
+  }, {
+    "valor" : "4tThLImVhbPbmmZ/ZkjaK09q1Pw6v5Zm2QR6mEVhqPuFw6p6Og5/3/C7Ui8uylEz",
+    "nomeServico" : "Site insano",
+    "dataCriacao" : "2025-11-26T17:01:50.676775"
+  } ]
 } ]

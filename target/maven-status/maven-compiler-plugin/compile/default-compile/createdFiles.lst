@@ -1,0 +1,14 @@
+test/service/GenerateTest.class
+model/Usuario.class
+controller/LoginController.class
+login/Login.class
+main/Main.class
+storage/StorageService$1.class
+service/Generate.class
+test/model/UsuarioTest.class
+model/Senha.class
+test/util/CriptografiaTest.class
+util/Criptografia.class
+model/SenhaInicial.class
+storage/StorageService.class
+controller/MainController.class
