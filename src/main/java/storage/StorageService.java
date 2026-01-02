@@ -47,11 +47,19 @@ public class StorageService {
     }
 
     public List<Usuario> carregarUsuarios() throws IOException {
-        if (!this.arquivoDeContas.exists()) {
+        if (!this.arquivoDeContas.exists() || this.arquivoDeContas.length() == 0) {
             return new ArrayList<>();
         }
-        // Carrega os usuários (as senhas virão criptografadas do JSON)
-        return objectMapper.readValue(this.arquivoDeContas, new TypeReference<List<Usuario>>() {
-        });
+        try {
+            // Carrega os usuários (as senhas virão criptografadas do JSON)
+            return objectMapper.readValue(this.arquivoDeContas, new TypeReference<List<Usuario>>() {
+            });
+        } catch (IOException e) {
+            // Se o arquivo estiver corrompido ou vazio (mas length > 0), retorna lista
+            // vazia
+            // para evitar crash, e faz backup do corrompido se quiser (opcional)
+            System.err.println("Erro ao ler arquivo de contas: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 }

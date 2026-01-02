@@ -32,11 +32,17 @@ public class LoginController {
     private List<Usuario> usuariosDoSistema;
 
     public void initialize() {
+        System.out.println("LOGIN_CONTROLLER: initialize() executing.");
         storageService = new StorageService();
         loginService = new Login();
         try {
+            System.out.println("LOGIN_CONTROLLER: Loading users from storage...");
             usuariosDoSistema = storageService.carregarUsuarios();
+            System.out.println("LOGIN_CONTROLLER: Users loaded. Count: "
+                    + (usuariosDoSistema != null ? usuariosDoSistema.size() : "null"));
         } catch (IOException e) {
+            System.err.println("LOGIN_CONTROLLER: Failed to load users:");
+            e.printStackTrace();
             statusLabel.setText("Erro ao carregar usuários: " + e.getMessage());
             usuariosDoSistema = new java.util.ArrayList<>();
         }

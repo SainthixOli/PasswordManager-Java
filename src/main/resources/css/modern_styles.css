@@ -1,0 +1,201 @@
+/* Font Loading */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+.root {
+    -fx-font-family: 'Inter', 'Segoe UI', sans-serif;
+    -fx-background-color: #1e1e2e;
+    /* Base Background */
+    -fx-text-fill: #cdd6f4;
+}
+
+/* --- Layout Containers --- */
+.sidebar {
+    -fx-background-color: #181825;
+    /* Darker Sidebar */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 0);
+    -fx-padding: 20;
+}
+
+.content-area {
+    -fx-background-color: #1e1e2e;
+    -fx-padding: 30;
+}
+
+.card {
+    -fx-background-color: #313244;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+    -fx-padding: 20;
+}
+
+.card-info {
+    -fx-background-color: rgba(137, 180, 250, 0.15);
+    /* Blue tint */
+    -fx-border-color: #89b4fa;
+    -fx-border-width: 2;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(137, 180, 250, 0.2), 10, 0, 0, 5);
+    -fx-padding: 20;
+}
+
+.card-warning {
+    -fx-background-color: rgba(250, 179, 135, 0.15);
+    /* Orange tint */
+    -fx-border-color: #fab387;
+    -fx-border-width: 2;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(250, 179, 135, 0.2), 10, 0, 0, 5);
+    -fx-padding: 20;
+}
+
+.card-danger {
+    -fx-background-color: rgba(243, 139, 168, 0.15);
+    /* Red tint */
+    -fx-border-color: #f38ba8;
+    -fx-border-width: 2;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(243, 139, 168, 0.2), 10, 0, 0, 5);
+    -fx-padding: 20;
+}
+
+
+/* --- Typography --- */
+.title-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #cba6f7;
+    /* Mauve */
+}
+
+.subtitle-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #a6adc8;
+    -fx-font-weight: bold;
+}
+
+.stat-value {
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #cdd6f4;
+    /* White text for contrast on colored cards */
+}
+
+/* --- Buttons --- */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #a6adc8;
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-size: 14px;
+    -fx-padding: 10 15;
+    -fx-cursor: hand;
+    -fx-background-radius: 10;
+}
+
+.nav-button:hover {
+    -fx-background-color: #45475a;
+    -fx-text-fill: #cdd6f4;
+}
+
+.nav-button:selected {
+    /* Logic to apply this class needed in Controller */
+    -fx-background-color: #313244;
+    -fx-text-fill: #cba6f7;
+    -fx-border-color: transparent transparent transparent #cba6f7;
+    -fx-border-width: 0 0 0 4;
+}
+
+.action-button {
+    -fx-background-color: linear-gradient(to right, #89b4fa, #b4befe);
+    -fx-text-fill: #1e1e2e;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-background-color: linear-gradient(to right, #b4befe, #89b4fa);
+    -fx-effect: dropshadow(gaussian, rgba(137, 180, 250, 0.4), 10, 0, 0, 2);
+}
+
+.danger-button {
+    -fx-background-color: #f38ba8;
+    -fx-text-fill: #1e1e2e;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+/* --- Inputs --- */
+.text-field,
+.search-field {
+    -fx-background-color: #181825;
+    -fx-text-fill: #cdd6f4;
+    -fx-prompt-text-fill: #585b70;
+    -fx-background-radius: 8;
+    -fx-border-color: #45475a;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 10;
+}
+
+.text-field:focused,
+.search-field:focused {
+    -fx-border-color: #cba6f7;
+    -fx-background-color: #1e1e2e;
+    -fx-effect: dropshadow(three-pass-box, rgba(203, 166, 247, 0.2), 5, 0, 0, 0);
+}
+
+/* --- TableView Modernization --- */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #45475a;
+    -fx-border-radius: 10;
+    -fx-padding: 0;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #313244;
+    -fx-background-radius: 10 10 0 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #45475a;
+    -fx-padding: 10;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #a6adc8;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.table-row-cell {
+    -fx-background-color: #1e1e2e;
+    -fx-text-fill: #cdd6f4;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #313244;
+    -fx-padding: 5;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #181825;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #313244;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #cba6f7;
+    -fx-background-insets: 0;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: #1e1e2e;
+    /* Dark text for contrast on selection */
+}

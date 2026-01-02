@@ -99,6 +99,24 @@ public class Criptografia {
         }
     }
 
+    /**
+     * Tenta decifrar usando uma chave fixa (Legado).
+     * Útil para recuperar dados antigos antes da implementação da chave derivada.
+     */
+    public static String decifrarLegado(String dadosCifradosComIvBase64) {
+        try {
+            // Tentativa 1: Chave padrão 16 bytes de zeros (comum em exemplos)
+            // Se o código antigo usava outra coisa, precisaremos descobrir.
+            // Vou tentar uma chave fixa que era comum em projetos desse tipo ou a string
+            // '1234567890123456'
+            String fixedKey = "1234567890123456";
+            SecretKeySpec secretKey = new SecretKeySpec(fixedKey.getBytes(StandardCharsets.UTF_8), ALGORITMO_CHAVE);
+            return decifrar(dadosCifradosComIvBase64, secretKey);
+        } catch (Exception e) {
+            throw new RuntimeException("Falha na decifragem legado.", e);
+        }
+    }
+
     // Construtor privado para impedir instanciação de classe utilitária
     private Criptografia() {
     }

@@ -1,4 +1,8 @@
 /Users/macbookair/PasswordManager-Java/PasswordManager-Java/src/main/java/login/Login.java
+/Users/macbookair/PasswordManager-Java/PasswordManager-Java/src/main/java/main/Launcher.java
+/Users/macbookair/PasswordManager-Java/PasswordManager-Java/src/main/java/controller/VaultController.java
+/Users/macbookair/PasswordManager-Java/PasswordManager-Java/src/main/java/controller/GeneratorController.java
+/Users/macbookair/PasswordManager-Java/PasswordManager-Java/src/main/java/controller/DashboardController.java
 /Users/macbookair/PasswordManager-Java/PasswordManager-Java/src/main/java/model/Senha.java
 /Users/macbookair/PasswordManager-Java/PasswordManager-Java/src/main/java/model/Usuario.java
 /Users/macbookair/PasswordManager-Java/PasswordManager-Java/src/main/java/storage/StorageService.java
