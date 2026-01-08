@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selo - Technical Showcase</title>
+    <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #050505;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent: #0ea5e9;
+            --accent-glow: rgba(14, 165, 233, 0.4);
+            --border: #222;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @keyframes glowPulse {
+            0% {
+                box-shadow: 0 0 5px var(--accent-glow);
+            }
+
+            50% {
+                box-shadow: 0 0 20px var(--accent-glow);
+            }
+
+            100% {
+                box-shadow: 0 0 5px var(--accent-glow);
+            }
+        }
+
+        @keyframes backgroundPan {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Canvas Background --- */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* --- Logo Animation --- */
+        @keyframes spinGear {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .brand-logo-svg {
+            width: 38px;
+            height: 38px;
+            animation: headerFloat 4s ease-in-out infinite;
+        }
+
+        .gear-shape-spin {
+            transform-origin: center;
+            transform-box: view-box;
+            animation: spinGear 15s linear infinite;
+        }
+
+        /* --- Header --- */
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Removed img tag style, using inline svg class */
+
+        .brand h1 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* --- Hero --- */
+        .hero {
+            text-align: center;
+            padding: 8rem 2rem 6rem;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .tagline {
+            display: inline-block;
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero h2 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            background: linear-gradient(270deg, #fff, #aaa, #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: backgroundPan 5s linear infinite;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .github-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fff;
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .github-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+        }
+
+        /* --- Sections --- */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-header {
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* --- Tech Grid --- */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .tech-item {
+            background: rgba(10, 10, 10, 0.6);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 0;
+            background: var(--accent);
+            transition: height 0.4s ease;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-5px);
+            background: rgba(20, 20, 20, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+
+        .tech-item:hover::before {
+            height: 100%;
+        }
+
+        .tech-item h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .tech-item h4 i {
+            color: var(--accent);
+        }
+
+        .tech-item p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* --- Showcase Features --- */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8rem;
+        }
+
+        .feature-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .feature-details h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .feature-details ul {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .feature-details li {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.05rem;
+        }
+
+        .feature-details li i {
+            color: var(--accent);
+            background: rgba(14, 165, 233, 0.1);
+            padding: 0.5rem;
+            border-radius: 50%;
+            font-size: 0.8rem;
+        }
+
+        .feature-image {
+            position: relative;
+            z-index: 10;
+        }
+
+        .feature-image::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -20px;
+            width: 100%;
+            height: 100%;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            z-index: -1;
+            transition: transform 0.4s ease;
+        }
+
+        .feature-image:hover::after {
+            transform: translate(10px, 10px);
+            border-color: var(--accent);
+        }
+
+        .feature-image img {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            transition: transform 0.4s ease;
+        }
+
+        .feature-image:hover img {
+            transform: scale(1.02);
+        }
+
+        /* --- Video Section --- */
+        .video-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        /* Glowing background behind phone */
+        .video-glow {
+            position: absolute;
+            width: 350px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .phone-frame {
+            border: 8px solid #1a1a1a;
+            border-radius: 35px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5) inset;
+            max-width: 320px;
+            background: #000;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.5s ease;
+        }
+
+        .phone-frame:hover {
+            transform: scale(1.02);
+            border-color: #333;
+        }
+
+        .phone-frame video {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* --- Developer Section --- */
+        .developer-section {
+            background: linear-gradient(145deg, var(--bg-secondary) 0%, #000 100%);
+            border-radius: 20px;
+            padding: 4rem;
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .developer-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.03) 0%, transparent 60%);
+            transform: rotate(45deg);
+        }
+
+        .dev-avatar {
+            width: 140px;
+            height: 140px;
+            background: #111;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3.5rem;
+            color: var(--text-secondary);
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .dev-avatar:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .dev-info {
+            position: relative;
+            z-index: 2;
+        }
+
+        .dev-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .dev-subtitle {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            display: inline-block;
+            border-bottom: 1px dashed var(--accent);
+            padding-bottom: 2px;
+        }
+
+        .dev-info p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            font-size: 1.05rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid transparent;
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            background: #000;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .feature-row {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .feature-row.reverse {
+                display: flex;
+                flex-direction: column-reverse;
+            }
+
+            .developer-section {
+                flex-direction: column;
+                text-align: center;
+                padding: 2rem;
+            }
+
+            .hero h2 {
+                font-size: 2.8rem;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="particles-canvas"></canvas>
+
+    <header>
+        <div class="brand">
+            <!-- Header Logo (Float Only) -->
+            <svg class="brand-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <path class="float-path" fill="url(#grad1)"
+                    d="M480 224H445.6C439.8 195.1 428.3 167.9 412.3 143.6L436.4 119.5C442.6 113.3 442.6 103.2 436.4 97L399 59.6C392.8 53.4 382.7 53.4 376.5 59.6L352.4 83.7C328.1 67.7 300.9 56.2 272 50.4V16C272 7.2 264.8 0 256 0H208C199.2 0 192 7.2 192 16V50.4C163.1 56.2 135.9 67.7 111.6 83.7L87.5 59.6C81.3 53.4 71.2 53.4 65 59.6L27.6 97C21.4 103.2 21.4 113.3 27.6 119.5L51.7 143.6C35.7 167.9 24.2 195.1 18.4 224H16C7.2 224 0 231.2 0 240V288C0 296.8 7.2 304 16 304H41.6C47.4 332.9 58.9 360.1 74.9 384.4L50.8 408.5C44.6 414.7 44.6 424.8 50.8 431L88.2 468.4C94.4 474.6 104.5 474.6 110.7 468.4L134.8 444.3C159.1 460.3 186.3 471.8 215.2 477.6V512C215.2 520.8 222.4 528 231.2 528H279.2C288 528 295.2 520.8 295.2 512V477.6C324.1 471.8 351.3 460.3 375.6 444.3L399.7 468.4C405.9 474.6 416 474.6 422.2 468.4L459.6 431C465.8 424.8 465.8 414.7 459.6 408.5L435.5 384.4C451.5 360.1 463 332.9 468.8 304H512C520.8 304 528 296.8 528 288V240C528 231.2 520.8 224 512 224ZM256 384C176.5 384 112 319.5 112 240C112 160.5 176.5 96 256 96C335.5 96 400 160.5 400 240C400 319.5 335.5 384 256 384Z" />
+                <path fill="#ffffff"
+                    d="M256 336C202.1 336 168 298.6 168 253.5C168 245 174.5 237.5 183.3 237.5H211.5C219.7 237.5 226.7 242.8 228.6 250.7C230.9 259.9 239.5 272 256 272C278.2 272 284 259.6 284 250.7C284 233 263.2 226.8 244.3 220.6C215.1 210.9 169.8 196.1 169.8 152.4C169.8 113.8 203.8 80 254.1 80C294.6 80 329.8 103.5 339.7 146.4C341.6 154.6 335.3 162.3 326.9 162.3H299.7C291.5 162.3 284.4 156.9 282.6 148.9C279.8 136.9 270.2 128 254.1 128C240.2 128 225.8 136.7 225.8 150.3C225.8 162.2 242.3 167.3 262.2 173.9C293.4 184.2 340 198.8 340 244.7C340 293.9 299.7 336 256 336Z" />
+            </svg>
+            <h1>SELO</h1>
+        </div>
+        <nav class="nav-links">
+            <a href="#architecture">Tech</a>
+            <a href="#showcase">Features</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#demo">Demo</a>
+            <a href="#developer">Dev</a>
+        </nav>
+    </header>
+
+    <div class="hero reveal-on-scroll">
+        <span class="tagline">v2.1 STABLE RELEASE</span>
+        <h2>Engenharia de Segurança<br>Minimalista & Robusta</h2>
+        <p>Projeto acadêmico focado em criptografia aplicada e arquitetura de software limpa. Implementação de
+            referência em Java 21 e Spring Boot.</p>
+        <a href="https://github.com/SainthixOli/PasswordManager-Java" class="github-btn"><i class="fab fa-github"></i>
+            Ver Código Fonte</a>
+    </div>
+
+    <style>
+        /* Header Logo Float (Restored) */
+        @keyframes headerFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+
+        .brand-logo-svg {
+            width: 38px;
+            height: 38px;
+            animation: headerFloat 4s ease-in-out infinite;
+        }
+
+        /* Cleaned up styles */
+    </style>
+
+    <section id="architecture" class="reveal-on-scroll">
+        <div class="section-header">
+            <h2 class="section-title">Arquitetura & Stack</h2>
+            <p class="section-subtitle">Construído sobre pilares de segurança e performance com Java 21.</p>
+        </div>
+
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h4><i class="fab fa-java"></i> Core Backend</h4>
+                <p>Spring Boot 3.2 rodando em Java 21 LTS. Virtual Threads e Records para máxima eficiência.</p>
+            </div>
+            <div class="tech-item">
+                <h4><i class="fas fa-lock"></i> JCA Security</h4>
+                <p>Java Cryptography Architecture. Hash SHA-512 (Auth) e AES-256 (Vault) nativos.</p>
+            </div>
+            <div class="tech-item">
+                <h4><i class="fas fa-database"></i> Secure Persistence</h4>
+                <p>Armazenamento criptografado em disco. Zero dependência de SGBDs externos para portabilidade.</p>
+            </div>
+            <div class="tech-item">
+                <h4><i class="fab fa-html5"></i> SSR Frontend</h4>
+                <p>Thymeleaf + CSS Moderno. Renderização segura no servidor sem exposição de lógica crítica.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="showcase">
+        <div class="section-header reveal-on-scroll">
+            <h2 class="section-title">Deep Dive</h2>
+            <p class="section-subtitle">Exploração técnica dos módulos do sistema.</p>
+        </div>
+
+        <div class="grid">
+            <!-- Login -->
+            <div class="feature-row reveal-on-scroll">
+                <div class="feature-details">
+                    <h3>Módulo de Autenticação</h3>
+                    <p>Sistema de verificação de identidade Zero-Knowledge (parcial). Apenas o hash salted é
+                        persistido.
+                    </p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Proteção contra Rainbow Tables via Salt Dinâmico</li>
+                        <li><i class="fas fa-check"></i> Design "True Black" para conforto visual</li>
+                    </ul>
+                </div>
+                <div class="feature-image">
+                    <img src="assets/login.png" alt="Sistema de Login">
+                </div>
+            </div>
+
+            <!-- Vault -->
+            <div class="feature-row reverse reveal-on-scroll">
+                <div class="feature-image">
+                    <img src="assets/vault.png" alt="Interface do Cofre">
+                </div>
+                <div class="feature-details">
+                    <h3>Vault Engine (AES-256)</h3>
+                    <p>Núcleo criptográfico. Cifragem simétrica de grau militar para cada credencial armazenada.</p>
+                    <ul>
+                        <li><i class="fas fa-code"></i> Operações em memória segura</li>
+                        <li><i class="fas fa-eye-slash"></i> Mascaramento de dados sensíveis na UI</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Generator -->
+            <div class="feature-row reveal-on-scroll">
+                <div class="feature-details">
+                    <h3>Gerador de Entropia</h3>
+                    <p>Utilitário para maximização de segurança de credenciais externas.</p>
+                    <ul>
+                        <li><i class="fas fa-random"></i> Alta variância de caracteres</li>
+                        <li><i class="fas fa-shield-alt"></i> Comprimento customizável até 256 bits efetivos</li>
+                    </ul>
+                </div>
+                <div class="feature-image">
+                    <img src="assets/generator.png" alt="Gerador de Senha">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roadmap" class="reveal-on-scroll">
+        <div class="section-header" style="margin-bottom: 2rem;">
+            <h2 class="section-title">Roadmap</h2>
+        </div>
+        <div class="tech-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="tech-item" style="border-top: 2px solid var(--accent);">
+                <h4>Q3 2024</h4>
+                <p>Cloud Sync (E2E Encrypted)</p>
+            </div>
+            <div class="tech-item" style="border-top: 2px solid #555;">
+                <h4>Q4 2024</h4>
+                <p>Mobile App (Kotlin/Swift)</p>
+            </div>
+            <div class="tech-item" style="border-top: 2px solid #333;">
+                <h4>2025</h4>
+                <p>Hardware Keys (YubiKey)</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEMO SECTION: Updated with Screen Recording -->
+    <section id="demo" class="reveal-on-scroll">
+        <div class="section-header" style="text-align: center;">
+            <h2 class="section-title">Demonstração</h2>
+            <p class="section-subtitle">Veja o fluxo real de uso do Selo.</p>
+        </div>
+        <div class="video-container">
+            <div class="video-glow"></div>
+            <div class="phone-frame" style="max-width: 380px; border-radius: 20px;">
+                <!-- New Demo Video -->
+                <video controls playsinline poster="assets/login.png">
+                    <source src="assets/video/demo_video.mov" type="video/mp4">
+                    <source src="assets/video/demo_video.mov" type="video/quicktime">
+                    Seu navegador não suporta vídeos.
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEVELOPER SECTION: Updated with Thank You Video -->
+    <section id="developer" class="reveal-on-scroll">
+        <div class="section-header">
+            <h2 class="section-title">O Desenvolvedor</h2>
+        </div>
+        <div class="developer-section">
+
+            <div class="dev-content-wrapper" style="display: flex; gap: 3rem; align-items: center; width: 100%;">
+
+                <!-- Left: Info -->
+                <div class="dev-info" style="flex: 1;">
+                    <div class="dev-avatar">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <h3>Oliver Arthur</h3>
+                        <div class="dev-subtitle">Graduando em Engenharia de Software | Uniceplac (4º Semestre)
+                        </div>
+                        <p>
+                            Apaixonado por construir sistemas seguros e escaláveis. O Selo é a materialização dos
+                            meus
+                            estudos avançados em arquitetura backend e criptografia.
+                        </p>
+                        <p style="margin-top: 1rem; font-style: italic; color: var(--accent);">
+                            "Agradeço sua visita ao projeto. Confira meu agradecimento pessoal no vídeo ao lado."
+                        </p>
+
+                        <div class="social-links" style="margin-top: 2rem;">
+                            <a href="https://github.com/SainthixOli" target="_blank" title="GitHub"><i
+                                    class="fab fa-github"></i></a>
+                            <a href="https://www.linkedin.com/in/oliver-arthur-souza-pinheiro-677b24376/"
+                                target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                            <a href="mailto:oliverarthursouzapinheiro@gmail.com" title="Email"><i
+                                    class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Thank You Video -->
+                <div class="dev-video" style="flex: 0 0 280px;">
+                    <div class="phone-frame" style="border-width: 4px; border-radius: 20px;">
+                        <video controls playsinline style="width: 100%; display: block;">
+                            <source src="assets/video/presentation.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Selo Project. Developed by Oliver Arthur.</p>
+    </footer>
+
+    <!-- Animations Script -->
+    <script>
+        // Reveal on Scroll
+        const observerOptions = {
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Simple Particle System
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 50; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            // Draw connections
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(14, 165, 233, ${0.1 - distance / 1500})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
+    </script>
+    </div>
+</body>
+
+</html>
