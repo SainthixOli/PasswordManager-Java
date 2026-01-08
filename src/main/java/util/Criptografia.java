@@ -1,43 +1,53 @@
-package util; 
+package util;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.security.spec.KeySpec;
 import java.util.Base64;
 
-public class Criptografia { 
+public class Criptografia {
 
     private static final String ALGORITMO_CRIPTOGRAFIA = "AES/CBC/PKCS5Padding";
     private static final String ALGORITMO_CHAVE = "AES";
+    private static final String ALGORITMO_DERIVACAO = "PBKDF2WithHmacSHA256";
     private static final int TAMANHO_IV_BYTES = 16;
+    private static final int ITERACOES = 65536;
+    private static final int TAMANHO_CHAVE_BITS = 256;
 
-    
-    private static final String CHAVE_MESTRA_FIXA_STRING = "MinhaChave123456"; 
-
-    private static SecretKey getChaveSecreta() {
-        byte[] chaveBytes = CHAVE_MESTRA_FIXA_STRING.getBytes(StandardCharsets.UTF_8);
-        // Validação do tamanho da chave para AES
-        if (chaveBytes.length != 16 && chaveBytes.length != 24 && chaveBytes.length != 32) {
-            
-            throw new IllegalArgumentException("A chave de criptografia DEVE ter 16, 24 ou 32 bytes.");
+    /**
+     * Deriva uma chave secreta a partir da senha e do sal.
+     * 
+     * @param senha A senha mestra do usuário.
+     * @param sal   O sal do usuário (deve ser o mesmo usado para o hash da senha ou
+     *              um específico para criptografia).
+     * @return A chave secreta AES.
+     */
+    public static SecretKey derivarChave(String senha, byte[] sal) {
+        try {
+            SecretKeyFactory factory = SecretKeyFactory.getInstance(ALGORITMO_DERIVACAO);
+            KeySpec spec = new PBEKeySpec(senha.toCharArray(), sal, ITERACOES, TAMANHO_CHAVE_BITS);
+            SecretKey tmp = factory.generateSecret(spec);
+            return new SecretKeySpec(tmp.getEncoded(), ALGORITMO_CHAVE);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao derivar chave: " + e.getMessage(), e);
         }
-        return new SecretKeySpec(chaveBytes, ALGORITMO_CHAVE);
     }
 
     /**
-     * Cifra os dados fornecidos usando AES.
-     * O IV (Vetor de Inicialização) é gerado aleatoriamente e prefixado ao texto cifrado.
+     * Cifra os dados fornecidos usando AES e a chave fornecida.
      *
      * @param dadosEmTextoPlano A string a ser cifrada.
+     * @param chave             A chave secreta derivada.
      * @return Uma string Base64 contendo o IV + dados cifrados.
-     * @throws RuntimeException Se ocorrer um erro durante a cifragem.
      */
-    public static String cifrar(String dadosEmTextoPlano) {
+    public static String cifrar(String dadosEmTextoPlano, SecretKey chave) {
         try {
-            SecretKey chaveSecreta = getChaveSecreta();
             Cipher cifrador = Cipher.getInstance(ALGORITMO_CRIPTOGRAFIA);
 
             byte[] iv = new byte[TAMANHO_IV_BYTES];
@@ -45,7 +55,7 @@ public class Criptografia {
             random.nextBytes(iv);
             IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
 
-            cifrador.init(Cipher.ENCRYPT_MODE, chaveSecreta, ivParameterSpec);
+            cifrador.init(Cipher.ENCRYPT_MODE, chave, ivParameterSpec);
             byte[] dadosCifradosBytes = cifrador.doFinal(dadosEmTextoPlano.getBytes(StandardCharsets.UTF_8));
 
             byte[] ivMaisDadosCifrados = new byte[iv.length + dadosCifradosBytes.length];
@@ -60,15 +70,14 @@ public class Criptografia {
     }
 
     /**
-     * Decifra os dados fornecidos (Base64, contendo IV + dados cifrados).
+     * Decifra os dados fornecidos usando a chave fornecida.
      *
      * @param dadosCifradosComIvBase64 A string Base64 a ser decifrada.
+     * @param chave                    A chave secreta derivada.
      * @return A string original em texto plano.
-     * @throws RuntimeException Se ocorrer um erro durante a decifragem.
      */
-    public static String decifrar(String dadosCifradosComIvBase64) {
+    public static String decifrar(String dadosCifradosComIvBase64, SecretKey chave) {
         try {
-            SecretKey chaveSecreta = getChaveSecreta();
             byte[] ivMaisDadosCifrados = Base64.getDecoder().decode(dadosCifradosComIvBase64);
 
             byte[] iv = new byte[TAMANHO_IV_BYTES];
@@ -80,16 +89,35 @@ public class Criptografia {
             System.arraycopy(ivMaisDadosCifrados, TAMANHO_IV_BYTES, dadosCifradosBytes, 0, tamanhoDadosCifrados);
 
             Cipher cifrador = Cipher.getInstance(ALGORITMO_CRIPTOGRAFIA);
-            cifrador.init(Cipher.DECRYPT_MODE, chaveSecreta, ivParameterSpec);
+            cifrador.init(Cipher.DECRYPT_MODE, chave, ivParameterSpec);
             byte[] dadosDecifradosBytes = cifrador.doFinal(dadosCifradosBytes);
 
             return new String(dadosDecifradosBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
             System.err.println("UTILS.CRIPTOGRAFIA: Erro ao decifrar dados: " + e.getMessage());
-            throw new RuntimeException("Erro durante a decifragem.", e);
+            throw new RuntimeException("Erro durante a decifragem (Senha incorreta ou dados corrompidos).", e);
+        }
+    }
+
+    /**
+     * Tenta decifrar usando uma chave fixa (Legado).
+     * Útil para recuperar dados antigos antes da implementação da chave derivada.
+     */
+    public static String decifrarLegado(String dadosCifradosComIvBase64) {
+        try {
+            // Tentativa 1: Chave padrão 16 bytes de zeros (comum em exemplos)
+            // Se o código antigo usava outra coisa, precisaremos descobrir.
+            // Vou tentar uma chave fixa que era comum em projetos desse tipo ou a string
+            // '1234567890123456'
+            String fixedKey = "1234567890123456";
+            SecretKeySpec secretKey = new SecretKeySpec(fixedKey.getBytes(StandardCharsets.UTF_8), ALGORITMO_CHAVE);
+            return decifrar(dadosCifradosComIvBase64, secretKey);
+        } catch (Exception e) {
+            throw new RuntimeException("Falha na decifragem legado.", e);
         }
     }
 
     // Construtor privado para impedir instanciação de classe utilitária
-    private Criptografia() {}
+    private Criptografia() {
+    }
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Arc?>
+
+<VBox spacing="30.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController" stylesheets="@../css/modern_styles.css" styleClass="content-area">
+
+    <Label text="Visão Geral de Segurança" styleClass="title-label"/>
+
+    <HBox spacing="30.0" alignment="CENTER_LEFT">
+        <!-- Security Score Card -->
+        <VBox styleClass="card" spacing="10.0" alignment="CENTER" prefWidth="300" prefHeight="250">
+            <Label text="Security Score" styleClass="subtitle-label"/>
+            <Label fx:id="scoreLabel" text="85%" styleClass="stat-value" style="-fx-font-size: 64px; -fx-text-fill: #a6e3a1;"/>
+            <Label text="Ótimo" style="-fx-text-fill: #a6e3a1; -fx-font-size: 18px;"/>
+        </VBox>
+
+        <!-- Stats Horizontal Box -->
+        <VBox spacing="20.0" HBox.hgrow="ALWAYS">
+            <Label text="Estatísticas do Cofre" styleClass="subtitle-label"/>
+            
+            <HBox spacing="20.0" HBox.hgrow="ALWAYS">
+                <!-- Total -->
+                <VBox styleClass="card-info" alignment="CENTER_LEFT" spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="🔑 Total" styleClass="subtitle-label" style="-fx-text-fill: #89b4fa;"/>
+                    <Label fx:id="totalPasswordsLabel" text="0" styleClass="stat-value"/>
+                </VBox>
+                
+                <!-- Weak -->
+                <VBox styleClass="card-danger" alignment="CENTER_LEFT" spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="⚠️ Fracas" styleClass="subtitle-label" style="-fx-text-fill: #f38ba8;"/>
+                    <Label fx:id="weakPasswordsLabel" text="0" styleClass="stat-value"/>
+                </VBox>
+
+                <!-- Reused -->
+                <VBox styleClass="card-warning" alignment="CENTER_LEFT" spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="♻️ Reutilizadas" styleClass="subtitle-label" style="-fx-text-fill: #fab387;"/>
+                    <Label fx:id="reusedPasswordsLabel" text="0" styleClass="stat-value"/>
+                </VBox>
+            </HBox>
+             
+             <!-- Tips Area -->
+             <VBox styleClass="card" VBox.vgrow="ALWAYS" spacing="10">
+                <Label text="💡 Dicas de Segurança" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+                <Label text="• Ative a autenticação de dois fatores onde possível." wrapText="true" style="-fx-text-fill: #cdd6f4;"/>
+                <Label text="• Evite usar datas de nascimento como PIN." wrapText="true" style="-fx-text-fill: #cdd6f4;"/>
+                <Label text="• Gira suas senhas a cada 90 dias." wrapText="true" style="-fx-text-fill: #cdd6f4;"/>
+            </VBox>
+        </VBox>
+    </HBox>
+
+</VBox>

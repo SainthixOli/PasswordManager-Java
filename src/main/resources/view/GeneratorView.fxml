@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
+<VBox spacing="30.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GeneratorController" stylesheets="@../css/modern_styles.css" styleClass="content-area" alignment="CENTER">
+
+    <Label text="Gerador de Senhas" styleClass="title-label"/>
+
+    <VBox styleClass="card" spacing="20.0" maxWidth="600" alignment="CENTER">
+        
+        <!-- Display Area -->
+        <TextField fx:id="passwordDisplay" editable="false" style="-fx-font-size: 24px; -fx-alignment: CENTER;" styleClass="text-field"/>
+
+        <!-- Length Slider -->
+        <VBox spacing="10.0">
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <Label text="Tamanho:" styleClass="subtitle-label"/>
+                <Label fx:id="lengthLabel" text="16" styleClass="subtitle-label" style="-fx-font-weight: bold;"/>
+            </HBox>
+            <Slider fx:id="lengthSlider" min="8" max="128" value="16" blockIncrement="1" majorTickUnit="16" minorTickCount="4" showTickMarks="true" showTickLabels="true"/>
+        </VBox>
+
+        <!-- Options -->
+        <HBox spacing="20.0" alignment="CENTER">
+            <CheckBox fx:id="upperCaseBox" text="A-Z" selected="true" style="-fx-text-fill: white;"/>
+            <CheckBox fx:id="lowerCaseBox" text="a-z" selected="true" style="-fx-text-fill: white;" disable="true"/> <!-- Always on essentially -->
+            <CheckBox fx:id="numbersBox" text="0-9" selected="true" style="-fx-text-fill: white;"/>
+            <CheckBox fx:id="specialsBox" text="!@#" selected="true" style="-fx-text-fill: white;"/>
+        </HBox>
+        
+        <!-- Action Buttons -->
+        <HBox spacing="15.0" alignment="CENTER">
+             <Button text="🔄 Gerar Nova" onAction="#handleGenerate" styleClass="action-button" prefWidth="150"/>
+             <Button text="📋 Copiar" onAction="#handleCopy" styleClass="nav-button" prefWidth="150" style="-fx-border-color: #89b4fa; -fx-border-width: 1;"/>
+        </HBox>
+
+        <Label fx:id="strengthLabel" text="Força: Forte" styleClass="subtitle-label" style="-fx-text-fill: #a6e3a1;"/>
+
+    </VBox>
+
+</VBox>

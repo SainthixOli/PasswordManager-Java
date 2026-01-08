@@ -6,11 +6,16 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Iterator;
+import javax.crypto.SecretKey;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Usuario {
     private String nomeDeUsuario;
     private SenhaInicial senhaDaConta;
     private List<Senha> senhasDeServicos;
+
+    @JsonIgnore
+    private transient SecretKey chaveSessao;
 
     public Usuario(String nomeDeUsuario, String senhaInicialParaConta) {
         this.nomeDeUsuario = nomeDeUsuario;
@@ -61,46 +66,44 @@ public class Usuario {
             System.err.println("Erro: Instância do gerador não fornecida.");
             return null;
         }
-        
-        return gerador.gerarSenhaParaUsuarioESalvar(this, nomeDoServico, tamanhoDaSenha);
+
+        String senhaPlana = gerador.gerarNovaStringDeSenha(tamanhoDaSenha);
+        if (senhaPlana == null)
+            return null;
+
+        String senhaCifrada;
+        try {
+            if (this.chaveSessao == null) {
+                throw new IllegalStateException("Chave de sessão não inicializada. Faça login novamente.");
+            }
+            senhaCifrada = util.Criptografia.cifrar(senhaPlana, this.chaveSessao);
+        } catch (Exception e) {
+            System.err.println("Erro ao cifrar senha: " + e.getMessage());
+            return null;
+        }
+
+        Senha novaSenha = new Senha(senhaCifrada, nomeDoServico);
+        this.adicionarSenhaDeServico(novaSenha);
+        return novaSenha;
     }
 
     public void mostrarPinsDeServicos() {
-        System.out.println("\n--- PINs/Senhas de Serviços para " + nomeDeUsuario + " ---");
-        List<Senha> senhasAtuais = this.senhasDeServicos;
-
-        if (senhasAtuais == null || senhasAtuais.isEmpty()) {
-            System.out.println("Nenhuma senha de serviço cadastrada.");
-        } else {
-            // Define o formato para a data
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            
-            for (Senha senha : senhasAtuais) {
-                System.out.println("------------------------------------");
-                System.out.println("Serviço  : " + senha.getNomeServico());
-                // MUDANÇA PRINCIPAL: Usa .getValor() para pegar a senha real
-                System.out.println("Senha    : " + senha.getValor());
-                System.out.println("Criada em: " + senha.getDataCriacao().format(formatter));
-            }
-            System.out.println("------------------------------------");
-        }
+        // Método legado de console, pode ser mantido ou removido.
+        // Se mantido, não vai mostrar senhas decifradas a menos que usemos a chave.
+        System.out.println("Método de console descontinuado. Use a interface gráfica.");
     }
 
     public void deletarSenhaDeServico(String nomeDoServico) {
         if (this.senhasDeServicos == null) {
             return;
         }
-        @SuppressWarnings("unused")
-        boolean removido = false;
         for (Iterator<Senha> iterator = this.senhasDeServicos.iterator(); iterator.hasNext();) {
             Senha senha = iterator.next();
             if (senha.getNomeServico().equalsIgnoreCase(nomeDoServico)) {
                 iterator.remove();
-                removido = true;
                 break;
             }
         }
-        
     }
 
     public void deletarCadastroDeServico(String nomeDoServico) {
@@ -108,7 +111,18 @@ public class Usuario {
     }
 
     public boolean autenticarUsuario(String tentativaDeSenha) {
-        if (this.senhaDaConta == null) return false;
+        if (this.senhaDaConta == null)
+            return false;
         return this.senhaDaConta.verificarSenha(tentativaDeSenha);
+    }
+
+    @JsonIgnore
+    public SecretKey getChaveSessao() {
+        return chaveSessao;
+    }
+
+    @JsonIgnore
+    public void setChaveSessao(SecretKey chaveSessao) {
+        this.chaveSessao = chaveSessao;
     }
 }
