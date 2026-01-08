@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cofre - Selo</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="brand">
+            <img src="/images/logo.svg" alt="Selo" style="width: 32px; height: auto;">
+            <span style="font-weight: 800; letter-spacing: 2px;">SELO</span>
+        </div>
+
+        <div class="user-profile">
+            <div style="flex: 1;">
+                <small style="color: var(--text-secondary);">Usuário</small>
+                <div th:text="${usuario.nomeDeUsuario}" style="font-weight: 600;">Admin</div>
+            </div>
+        </div>
+
+        <ul class="nav-links" style="margin-top: 2rem;">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" onclick="showSection('vault', this)">
+                    <span>📂</span> Meu Cofre
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection('generator', this)">
+                    <span>⚡</span> Gerador de Senhas
+                </a>
+            </li>
+        </ul>
+
+        <div style="margin-top: auto;">
+            <a href="/logout" class="nav-link" style="color: var(--danger);">
+                <span>🚪</span> Sair
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Section: Vault -->
+        <div id="vault" class="section active">
+            <div class="glass-card">
+                <div class="vault-header">
+                    <h2>Minhas Senhas</h2>
+                    <button class="btn" style="width: auto;" onclick="openAddModal()">+ Nova Senha</button>
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Buscar senhas..." onkeyup="filterPasswords()">
+                </div>
+
+                <div class="password-grid" id="passwordGrid">
+                    <div th:each="senha : ${usuario.senhasDeServicos}" class="password-item">
+                        <div class="service-info">
+                            <h3 th:text="${senha.nomeServico}">Serviço</h3>
+                            <span style="display:none;"
+                                th:text="${senha.nomeServico != null ? senha.nomeServico.toLowerCase() : ''}"></span>
+                            <span>*****</span>
+                        </div>
+                        <div class="actions">
+                            <button class="btn-icon btn-copy" th:attr="data-service=${senha.nomeServico}"
+                                onclick="copyPassword(this.getAttribute('data-service'))" title="Copiar">📋</button>
+                            <button class="btn-icon" th:attr="data-service=${senha.nomeServico}"
+                                onclick="showPassword(this.getAttribute('data-service'), this)" title="Ver">👁️</button>
+                            <button class="btn-icon btn-delete" th:attr="data-service=${senha.nomeServico}"
+                                onclick="deletePassword(this.getAttribute('data-service'))" title="Excluir">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(usuario.senhasDeServicos)}"
+                    style="text-align: center; color: var(--text-secondary); padding: 2rem;">
+                    Nenhuma senha salva ainda.
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Generator -->
+        <div id="generator" class="section">
+            <div class="glass-card">
+                <h2>Gerador de Senhas Avançado</h2>
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center;">
+                    <input type="text" id="generatedPassword" readonly
+                        style="font-family: monospace; font-size: 1.2rem; letter-spacing: 2px; text-align: center;">
+                    <button class="btn" style="width: auto;" onclick="copyGenerated()">Copiar</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Tamanho da Senha: <span id="pwdLengthVal">16</span></label>
+                    <!-- Slider from 4 to 256 -->
+                    <input type="range" id="pwdLength" min="4" max="256" value="16"
+                        oninput="document.getElementById('pwdLengthVal').innerText = this.value; generateAdvancedPassword();">
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" id="useUpper" checked
+                            onchange="generateAdvancedPassword()"> ABC (Maiúsculas)</label>
+                    <label class="checkbox-item"><input type="checkbox" id="useLower" checked
+                            onchange="generateAdvancedPassword()"> abc (Minúsculas)</label>
+                    <label class="checkbox-item"><input type="checkbox" id="useNumbers" checked
+                            onchange="generateAdvancedPassword()"> 123 (Números)</label>
+                    <label class="checkbox-item"><input type="checkbox" id="useSymbols" checked
+                            onchange="generateAdvancedPassword()"> !@# (Símbolos)</label>
+                </div>
+
+                <button class="btn" onclick="generateAdvancedPassword()">↻ Gerar Nova Senha</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal Adicionar -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal-content glass-card">
+            <h2>Adicionar Senha</h2>
+            <form id="addForm" onsubmit="addPassword(event)">
+                <div class="form-group">
+                    <label>Nome do Serviço</label>
+                    <input type="text" id="newServiceName" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="password" id="newPassword" required>
+                    </div>
+                    <small style="color: var(--text-secondary); margin-top: 0.5rem; display: block;">Dica: Use o Gerador
+                        na aba lateral para criar senhas fortes.</small>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="button" class="btn"
+                        style="background: transparent; border: 1px solid var(--glass-border);"
+                        onclick="closeAddModal()">Cancelar</button>
+                    <button type="submit" class="btn">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Ação realizada!</div>
+
+    <script src="/js/vault.js"></script>
+    <script>
+        // Init Generator
+        window.onload = function () {
+            generateAdvancedPassword();
+        }
+    </script>
+</body>
+
+</html>
